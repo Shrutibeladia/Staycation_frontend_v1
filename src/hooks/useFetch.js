@@ -10,7 +10,7 @@ const useFetch = (url) => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(url);
+        const res = await axios.get('https://staycation-server-v1-1.onrender.com/api' + url);
         setData(res.data);
       } catch (err) {
         setError(err);
