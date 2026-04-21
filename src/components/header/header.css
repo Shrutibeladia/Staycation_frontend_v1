@@ -1,0 +1,338 @@
+/* .header {
+  background-color: #003580;
+  color: white;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.headerContainer {
+  width: 100%;
+  max-width: 1024px;
+  margin: 20px 0px 100px 0px;
+}
+
+.headerContainer.listMode {
+  margin: 20px 0px 0px 0px;
+}
+
+.headerList {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 50px;
+}
+
+.headerListItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.headerListItem.active {
+  border: 1px solid white;
+  padding: 10px;
+  border-radius: 20px;
+}
+
+.headerDesc {
+  margin: 20px 0px;
+}
+
+.headerBtn {
+  background-color: #0071c2;
+  color: white;
+  font-weight: 500;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.headerSearch {
+  height: 30px;
+  background-color: white;
+  border: 3px solid #febb02;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 10px 0px;
+  border-radius: 5px;
+  position: absolute;
+  bottom: -25px;
+  width: 100%;
+  max-width: 1024px;
+}
+
+.headerIcon {
+  color: lightgray;
+}
+
+.headerSearchItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.headerSearchInput {
+  border: none;
+  outline: none;
+}
+
+.headerSearchText {
+  color: lightgray;
+  cursor: pointer;
+}
+
+.date {
+  position: absolute;
+  top: 50px;
+  z-index: 2;
+}
+
+.options {
+  z-index: 2;
+  position: absolute;
+  top: 50px;
+  background-color: white;
+  color: gray;
+  border-radius: 5px;
+  -webkit-box-shadow: 0px 0px 10px -5px rgba(0, 0, 0, 0.4);
+  box-shadow: 0px 0px 10px -5px rgba(0, 0, 0, 0.4);
+}
+
+.optionItem {
+  width: 200px;
+  display: flex;
+  justify-content: space-between;
+  margin: 10px;
+}
+
+.optionCounter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: black;
+}
+
+.optionCounterButton {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #0071c2;
+  color: #0071c2;
+  cursor: pointer;
+  background-color: white;
+}
+
+.optionCounterButton:disabled {
+  cursor: not-allowed;
+} */
+
+
+*{
+  box-sizing: border-box;
+}
+
+
+.header{
+  /* background-color: hotpink; */
+ background-repeat: no-repeat;
+    background-size:cover;
+  /* background-image: url("https://wallpapercave.com/wp/wp8991752.jpg"); */
+  background-attachment: fixed;
+  display: flex;
+  height: 600px;
+  justify-content: center;
+  position: relative;
+   animation-name: Navpicture;
+   animation-duration: 60s;
+   animation-iteration-count:infinite;
+  /* -webkit-filter: grayscale(10%); /* Safari 6.0 - 9.0 */
+  /* filter: grayscale(10%);  */
+
+}
+
+@keyframes Navpicture{
+  0%{background-image:url("https://images.pexels.com/photos/338504/pexels-photo-338504.jpeg?cs=srgb&dl=pexels-thorsten-technoman-338504.jpg&fm=jpg");}
+  10%{background-image: url("https://cdn.wallpapersafari.com/56/44/rUJVwN.jpg");}
+  30%{background-image: url("https://cdn.loewshotels.com/loewshotels.com-2466770763/cms/cache/v2/59037b3d5a82b.jpg/1920x1080/fit/80/5d84ef9f93e5c54c405f53962ac2c073.jpg");}
+  50%{background-image: url("https://wallpaperaccess.com/full/2690549.jpg");}
+  70%{background-image: url("https://cdn1.tablethotels.com/media/ecs/global/email/assets/20200402_Zoom/TabletHotels_Public-Mirrored.jpg");}
+  100%{background-image: url("https://archello.s3.eu-central-1.amazonaws.com/images/2015/12/22/Absmall02resize.1506079172.3059.jpg");}
+}
+.headerTitle {
+  
+   margin-top:150px;
+  margin-left:180px; 
+  margin-right:300px;
+  font-size: 65px;
+  color: white;
+  text-shadow: 2px 2px 4px #000000;
+
+
+
+
+
+ 
+ 
+  /* align-items:center ; */
+  /* background:pink; */
+}
+.Title{
+ 
+  color: white;
+  text-shadow: 2px 2px 4px #000000;
+
+}
+
+.headerContainer{
+  width: 100%;
+  
+  max-width: 1024px;
+  margin: 20px 0px 100px 0px;
+
+}
+
+
+.headerList{
+  display: flex;
+  gap: 40px;
+  margin-bottom: 50px;
+}
+
+.headerListItem{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.headerListItem.active{
+  border: 1px solid white;
+  padding: 10px;
+  border-radius: 20px;
+}
+
+.headerDesc{
+  margin: 20px 0px;
+
+}
+
+.headerBtn{
+  background-color: #32050c;
+  color:rgb(234, 234, 240); 
+  font-weight: 500;
+  border:none;
+  padding: 5px;
+  border-style: solid;
+  cursor: pointer;
+  font-size:20px;
+
+}
+
+.headerSearch{
+  height: 70px;
+  background-color: rgb(239, 240, 245);
+  /* border: 3px solid rgb(0, 115, 255); */
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 10px 0px;
+  /* border-radius: 50px; */
+  position: absolute;
+  bottom: -25px;
+  width: 100%;
+  max-width: 1024px;
+  border-bottom: solid;
+  border-color: #32050c;
+
+
+}
+
+.headerIcon{
+  color: lightgray;
+
+}
+
+.headerSearchItem{
+  display:flex;
+  align-items:center;
+  gap:10px;
+ 
+}
+.headerSearchInput{
+  border:none;
+  background-color: transparent;
+  outline: none;
+}
+.headerSearchText{
+  color:rgb(118, 114, 114);
+  cursor: pointer;
+}
+.date{
+  position: absolute;
+  top:50px;
+  z-index: 2;
+}
+.options{
+  z-index: 2;
+  position: absolute;
+  top:50px;
+  background-color: white;
+  color:grey;
+  border-radius:5px;
+-webkit-box-shadow: 0px 0px 10px -5px rgba(0,0,0,0.4);
+box-shadow:  0px 0px 10px -5px rgba(0,0,0,0.4);
+
+}
+.optionItem{
+  width:200px;
+  display: flex;
+  justify-content: space-between;
+  margin:10px;
+}
+.optionCounterNumber{
+  background: white;
+  border:none;
+}
+.optionCounterButton{
+  width: 30px;
+  height: 30px;
+  border: 1px solid #0071c2;
+  color: #0071c2;
+  cursor: pointer;
+  background-color: white;
+}
+.optionCounterButton:disabled{
+  cursor: not-allowed;
+}
+.headerContainer.listMode{
+  margin:-1px 0px 0px 0px;
+  /* background-color: #000000;
+
+  height:100%; */
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

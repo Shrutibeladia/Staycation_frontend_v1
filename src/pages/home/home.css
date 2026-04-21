@@ -1,0 +1,33 @@
+/* .homeContainer{
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+.homeTitle{
+  width: 1024px;
+  font-size: 20px;
+} */
+
+
+.homeContainer{
+  margin-top:50px;
+  display: flex;
+  flex-direction:column;
+  align-items: center;
+  gap:30px;
+ 
+}
+.homeTitle1{
+  margin-left: 70px;
+  width: 400px;
+  text-align: center;
+  font-size: 30px;
+  font-weight: 100;
+  border-style: solid;
+  border-color: rgb(76, 179, 179);
+  color:rgb(76, 179, 179);
+
+}
