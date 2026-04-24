@@ -1,0 +1,54 @@
+/* ================================
+   REGISTER PAGE STYLES
+   ================================ */
+
+.register-container {
+  max-width: 600px;
+}
+
+.register-form {
+  gap: 12px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.form-row .form-group {
+  margin-bottom: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .register-container {
+    max-width: 100%;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .login-header h1 {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .register-container {
+    padding: 24px 16px;
+  }
+
+  .form-row {
+    gap: 10px;
+  }
+
+  .login-header h1 {
+    font-size: 24px;
+  }
+
+  .lInput {
+    font-size: 13px;
+  }
+}

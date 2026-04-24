@@ -1,23 +1,89 @@
-.footer{
+/* ================================
+   FOOTER STYLES
+   ================================ */
+
+.footer {
   width: 100%;
-  width: 1024px;
-  font-size: 12px;
+  background-color: var(--text-dark);
+  color: white;
+  padding: 40px 20px 20px;
+  margin-top: 60px;
+  border-top: 1px solid var(--border-color);
 }
 
-.fLists{
+.fLists {
   width: 100%;
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 50px;
+  max-width: 1280px;
+  margin: 0 auto 32px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 32px;
 }
 
-.fList{
+.fList {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
-.fListItem{
+.fListItem {
   margin-bottom: 10px;
-  color: #003580;
+  color: rgba(255, 255, 255, 0.7);
   cursor: pointer;
+  font-size: 14px;
+  transition: var(--transition);
+}
+
+.fListItem:first-child {
+  color: white;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.fListItem:hover {
+  color: var(--primary-light);
+}
+
+.fText {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .footer {
+    padding: 30px 16px 16px;
+  }
+
+  .fLists {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+
+  .fListItem {
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    padding: 24px 12px 12px;
+  }
+
+  .fLists {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .fListItem {
+    font-size: 12px;
+  }
 }
