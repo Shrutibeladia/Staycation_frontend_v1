@@ -3,22 +3,23 @@
    ================================ */
 
 .navbar {
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-  box-shadow: var(--shadow-md);
   position: sticky;
   top: 0;
-  z-index: 1000;
-  border-bottom: 1px solid var(--primary-light);
+  z-index: 1100;
+  background: rgba(15, 23, 42, 0.92);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.18);
 }
 
 .nav-container {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 12px 20px;
+  padding: 16px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  gap: 18px;
   flex-wrap: wrap;
 }
 
@@ -27,86 +28,79 @@
 }
 
 .nav-logo {
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 800;
   color: white;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   letter-spacing: -0.5px;
-  transition: var(--transition);
+  transition: transform 0.25s ease;
 }
 
 .nav-logo:hover {
-  transform: scale(1.05);
+  transform: scale(1.04);
 }
 
 .nav-items {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
   flex-wrap: wrap;
 }
 
 .nav-user-section {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
 }
 
 .nav-user-info {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   color: white;
-  padding: 6px 12px;
-  background-color: rgba(255, 255, 255, 0.15);
-  border-radius: 8px;
+  padding: 8px 14px;
+  background-color: rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .user-icon {
   font-size: 16px;
 }
 
-.nav-username {
-  display: inline;
-}
-
 .nav-auth-buttons {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   align-items: center;
 }
 
-.nav-ghost {
-  background-color: transparent;
-  color: white;
-  border: 2px solid white;
-  padding: 6px 16px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
+.nav-auth-buttons .btn {
+  min-width: 120px;
 }
 
-.nav-ghost:hover {
-  background-color: white;
+.nav-auth-buttons .btn-ghost {
+  padding: 10px 18px;
+  color: white;
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+.nav-auth-buttons .btn-ghost:hover {
   color: var(--primary-color);
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
   .nav-container {
-    padding: 10px 16px;
+    padding: 14px 18px;
     flex-direction: column;
-    gap: 12px;
+    align-items: stretch;
   }
 
   .nav-logo {
-    font-size: 20px;
+    font-size: 22px;
   }
 
   .nav-items {
@@ -119,44 +113,29 @@
     justify-content: space-between;
   }
 
-  .nav-user-info {
-    flex: 1;
-  }
-
   .nav-auth-buttons {
     width: 100%;
     gap: 8px;
   }
-
-  .btn {
-    flex: 1;
-    min-width: 100px;
-  }
 }
 
 @media (max-width: 480px) {
-  .nav-logo {
-    font-size: 18px;
-  }
-
   .nav-container {
-    padding: 8px 12px;
+    padding: 12px 14px;
   }
 
-  .nav-user-section {
-    flex-direction: column;
-    width: 100%;
+  .nav-logo {
+    font-size: 20px;
   }
 
-  .nav-username {
-    display: block;
-  }
-
+  .nav-user-section,
   .nav-auth-buttons {
     flex-direction: column;
+    width: 100%;
+    gap: 10px;
   }
 
-  .btn {
+  .nav-auth-buttons .btn {
     width: 100%;
   }
 }

@@ -1,21 +1,41 @@
-import {
-  faBed,
-  faCalendarDays,
-  faCar,
-  faPerson,
-  faPlane,
-  faTaxi,
-} from "@fortawesome/free-solid-svg-icons";
+import { faBed, faCalendarDays, faPerson } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./header.css";
 import { DateRange } from "react-date-range";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { SearchContext } from "../../context/SearchContext";
 import { AuthContext } from "../../context/AuthContext";
+
+const carouselItems = [
+  {
+    title: "New York Nights",
+    subtitle: "Stay where the city never sleeps.",
+    image:
+      "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1600&q=80",
+  },
+  {
+    title: "Parisian Romance",
+    subtitle: "Charming hotels near iconic landmarks.",
+    image:
+      "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1600&q=80",
+  },
+  {
+    title: "Tokyo Skylines",
+    subtitle: "Modern comfort in the heart of the metropolis.",
+    image:
+      "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=1600&q=80",
+  },
+  {
+    title: "Dubai Luxury",
+    subtitle: "Discover premium stays with breathtaking views.",
+    image:
+      "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1600&q=80",
+  },
+];
 
 const Header = ({ type }) => {
   const [destination, setDestination] = useState("");
@@ -33,9 +53,17 @@ const Header = ({ type }) => {
     children: 0,
     room: 1,
   });
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % carouselItems.length);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, []);
 
   const navigate = useNavigate();
-  const {user}=useContext(AuthContext)
+  const { user } = useContext(AuthContext);
 
   const handleOption = (name, operation) => {
     setOptions((prev) => {
@@ -55,47 +83,36 @@ const Header = ({ type }) => {
 
   return (
     <div className="header">
+      <div className="headerCarousel">
+        {carouselItems.map((slide, index) => (
+          <div
+            key={index}
+            className={`carouselSlide ${activeSlide === index ? "active" : ""}`}
+            style={{ backgroundImage: `url(${slide.image})` }}
+          >
+            <div className="slideOverlay" />
+          </div>
+        ))}
+      </div>
       <div
         className={
           type === "list" ? "headerContainer listMode" : "headerContainer"
         }
       >
-        {/* <div className="headerList">
-          <div className="headerListItem active">
-            <FontAwesomeIcon icon={faBed} />
-            <span>Stays</span>
-          </div>
-          <div className="headerListItem">
-            <FontAwesomeIcon icon={faPlane} />
-            <span>Flights</span>
-          </div>
-          <div className="headerListItem">
-            <FontAwesomeIcon icon={faCar} />
-            <span>Car rentals</span>
-          </div>
-          <div className="headerListItem">
-            <FontAwesomeIcon icon={faBed} />
-            <span>Attractions</span>
-          </div>
-          <div className="headerListItem">
-            <FontAwesomeIcon icon={faTaxi} />
-            <span>Airport taxis</span>
-          </div>
-        </div> */}
         {type !== "list" && (
           <>
-            <div className='headerTitle'>
-          <h1>StayCation</h1>
-          </div>
-          <p className='Title'>A hotel is a commercial establishment that provides lodging, meals, and other services to guests, travelers, and tourists.</p>
-
-            {/* <p className="headerDesc">
-              Get rewarded for your travels – unlock instant savings of 10% or
-              more with a free Lamabooking account
-            </p> */}
-
-            {/* {!user && <button className="headerBtn">Sign in / Register</button>} */}
-              <div className="headerSearch">
+            <div className="heroBadge">City escapes & staycation deals</div>
+            <p className="heroWelcome">
+              {user
+                ? `Welcome back, ${user.username}! Explore your next staycation.`
+                : "Find boutique hotels, top city views, and dreamy staycations."}
+            </p>
+            <div className="headerTitle">
+              <h1>StayCation</h1>
+            </div>
+            <p className="heroSubtitle">{carouselItems[activeSlide].title}</p>
+            <p className="Title">{carouselItems[activeSlide].subtitle}</p>
+            <div className="headerSearch">
               <div className="headerSearchItem">
                 <FontAwesomeIcon icon={faBed} className="headerIcon" />
                 <input
@@ -204,6 +221,16 @@ const Header = ({ type }) => {
                   Search
                 </button>
               </div>
+            </div>
+            <div className="carouselDots">
+              {carouselItems.map((_, index) => (
+                <button
+                  key={index}
+                  className={`dot ${activeSlide === index ? "active" : ""}`}
+                  onClick={() => setActiveSlide(index)}
+                  aria-label={`Show slide ${index + 1}`}
+                />
+              ))}
             </div>
           </>
         )}

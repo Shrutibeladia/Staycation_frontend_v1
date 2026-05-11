@@ -37,8 +37,7 @@ const Featured = () => {
           </div>
           <div className="featuredItem">
             <img
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Marine_Lines_Mumbai_2021.jpg/800px-Marine_Lines_Mumbai_2021.jpg"
-              alt=""
+              src="https://cdn.britannica.com/26/84526-050-45452C37/Gateway-monument-India-entrance-Mumbai-Harbour-coast.jpg"
               className="featuredImg"
             />
             <div className="featuredTitles">
