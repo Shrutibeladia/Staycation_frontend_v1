@@ -1,0 +1,170 @@
+.admin-page {
+  min-height: 100vh;
+  background: #f3f6fb;
+}
+
+.admin-container {
+  max-width: 1200px;
+  margin: 32px auto 80px;
+  padding: 24px;
+}
+
+.admin-header h1 {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.admin-header p {
+  margin-bottom: 22px;
+  color: #555;
+}
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.admin-grid-small {
+  grid-template-columns: 1fr 1.2fr;
+}
+
+.admin-panel {
+  background: white;
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 18px 60px rgba(21, 23, 50, 0.08);
+}
+
+.admin-panel h2 {
+  margin-bottom: 16px;
+}
+
+.hotel-list,
+.room-list {
+  display: grid;
+  gap: 14px;
+}
+
+.hotel-row,
+.room-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  align-items: center;
+}
+
+.hotel-row-selected {
+  border-color: #2563eb;
+  background: #eff6ff;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+.admin-hint {
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.admin-hotel-picker {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.admin-hotel-picker select {
+  padding: 12px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  font-size: 15px;
+  background: white;
+}
+
+.admin-selected-label {
+  margin-bottom: 12px;
+  color: #1e40af;
+  font-size: 14px;
+}
+
+.hotel-row span,
+.room-row span {
+  display: block;
+  color: #555;
+  margin-top: 4px;
+}
+
+.hotel-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.admin-form-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.admin-form-grid label {
+  display: grid;
+  gap: 8px;
+  color: #333;
+}
+
+.admin-form-grid input,
+.admin-form-grid textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  font-size: 15px;
+}
+
+.admin-form-grid textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.admin-checkbox {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.admin-alert {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 16px;
+  border-radius: 14px;
+  font-weight: 600;
+}
+
+.admin-alert-error {
+  background: #fde2e2;
+  color: #8b1d1d;
+}
+
+.admin-alert-success {
+  background: #e6f4ea;
+  color: #1f6e2d;
+}
+
+@media (max-width: 960px) {
+  .admin-grid,
+  .admin-grid-small {
+    grid-template-columns: 1fr;
+  }
+}

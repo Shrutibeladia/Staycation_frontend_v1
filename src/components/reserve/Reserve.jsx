@@ -1,82 +1,110 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
-
 import "./reserve.css";
-import useFetch from "../../hooks/useFetch";
 import { useContext, useState } from "react";
 import { SearchContext } from "../../context/SearchContext";
-import axios from "axios";
+import { BookingContext } from "../../context/BookingContext";
 import { useNavigate } from "react-router-dom";
+import { bookings } from "../../api/apiService";
+import { getErrorMessage } from "../../api/errorUtils";
+import { format } from "date-fns";
+import BookingDates from "../datePicker/BookingDates";
+import { getBookingDateRange } from "../../utils/bookingDates";
 
- const Reserve = ({ setOpen, hotelId }) => {
- const [selectedRooms, setSelectedRooms] = useState([]);
-  const { data, loading, error } = useFetch(`/hotels/room/${hotelId}`);
-  const { dates } = useContext(SearchContext);
+const Reserve = ({ setOpen, hotelId, hotel, rooms = [] }) => {
+  const [selected, setSelected] = useState(null);
+  const [bookingError, setBookingError] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+  const { dates, options } = useContext(SearchContext);
+  const { dispatch: bookingDispatch } = useContext(BookingContext);
+  const navigate = useNavigate();
 
   const getDatesInRange = (startDate, endDate) => {
     const start = new Date(startDate);
     const end = new Date(endDate);
-
-    const date = new Date(start.getTime());
-
-    const dates = [];
-
-    while (date <= end) {
-      dates.push(new Date(date).getTime());
-      date.setDate(date.getDate() + 1);
+    const current = new Date(start.getTime());
+    const result = [];
+    while (current < end) {
+      result.push(format(current, "yyyy-MM-dd"));
+      current.setDate(current.getDate() + 1);
     }
-
-    return dates;
+    return result;
   };
 
-  const alldates = getDatesInRange(dates[0].startDate, dates[0].endDate);
+  const { checkInDate, checkOutDate, nights } = getBookingDateRange(dates);
 
   const isAvailable = (roomNumber) => {
-    const isFound = roomNumber.unavailableDates.some((date) =>
-      alldates.includes(new Date(date).getTime())
-    );
-
-    return !isFound;
-  };
-
-  const handleSelect = (e) => {
-    const checked = e.target.checked;
-    const value = e.target.value;
-    setSelectedRooms(
-      checked
-        ? [...selectedRooms, value]
-        : selectedRooms.filter((item) => item !== value)
+    if (!dates?.[0]) return true;
+    const rangeDates = getDatesInRange(dates[0].startDate, dates[0].endDate);
+    return !roomNumber.unavailableDates?.some((d) =>
+      rangeDates.includes(format(new Date(d), "yyyy-MM-dd"))
     );
   };
 
-  const navigate = useNavigate();
+  const handleSelect = (room, roomNumber) => {
+    setSelected({ room, roomNumber });
+    setBookingError(null);
+  };
 
-  const handleClick = async () => {
+  const handleBook = async () => {
+    if (!selected) {
+      setBookingError("Please select an available room number.");
+      return;
+    }
+    if (!checkInDate || !checkOutDate) {
+      setBookingError("Please select check-in and check-out dates from search.");
+      return;
+    }
+
+    const totalPrice = selected.room.price * nights;
+    const payload = {
+      hotelId,
+      roomId: selected.room._id,
+      roomNumberId: selected.roomNumber._id,
+      checkInDate,
+      checkOutDate,
+      totalPrice,
+      guests: options?.adult || 1,
+    };
+
+    setSubmitting(true);
+    setBookingError(null);
+
     try {
-      await Promise.all(
-        selectedRooms.map(async (roomId) => {
-          const res = await axios.put(`/rooms/availability/${roomId}`, {
-            dates: alldates,
-          });
-          return res.data;
-        })
-      );
+      const res = await bookings.create(payload);
+      bookingDispatch({
+        type: "SET_BOOKING_RESULT",
+        payload: res.data.booking,
+      });
+      bookingDispatch({
+        type: "SET_SELECTION",
+        payload: { ...payload, lastBooking: res.data.booking },
+      });
       setOpen(false);
       navigate("/success");
     } catch (err) {
-      console.error(err);
+      const status = err?.response?.status;
+      if (status === 409) {
+        setBookingError("Selected dates are no longer available. Please pick another room.");
+      } else {
+        setBookingError(getErrorMessage(err, "Booking failed. Please try again."));
+      }
+    } finally {
+      setSubmitting(false);
     }
   };
+
   return (
-     <div className="reserve">
+    <div className="reserve">
       <div className="rContainer">
-         <FontAwesomeIcon
-           icon={faCircleXmark}
-           className="rClose"         
-            onClick={() => setOpen(false)}
+        <FontAwesomeIcon
+          icon={faCircleXmark}
+          className="rClose"
+          onClick={() => setOpen(false)}
         />
-         <span>Select your rooms:</span>
-               {data.map(item => (
+        <span>Select a room at {hotel?.name}:</span>
+        <BookingDates compact />
+        {rooms.map((item) => (
           <div className="rItem" key={item._id}>
             <div className="rItemInfo">
               <div className="rTitle">{item.title}</div>
@@ -84,29 +112,45 @@ import { useNavigate } from "react-router-dom";
               <div className="rMax">
                 Max people: <b>{item.maxPeople}</b>
               </div>
-              <div className="rPrice">{item.price}</div>
+              <div className="rPrice">${item.price}/night</div>
             </div>
             <div className="rSelectRooms">
-              {item.roomNumbers.map((roomNumber) => (
-                <div className="room">
-                  <label>{roomNumber.number}</label>
-                  <input
-                    type="checkbox"
-                    value={roomNumber._id}
-                    onChange={handleSelect}
-                    disabled={!isAvailable(roomNumber)}
-                  />
-                </div>
-              ))}
+              {item.roomNumbers?.map((roomNumber) => {
+                const available = isAvailable(roomNumber);
+                const isSelected =
+                  selected?.roomNumber?._id === roomNumber._id;
+                return (
+                  <div className="room" key={roomNumber._id}>
+                    <label>
+                      Room {roomNumber.number}
+                      {!available && " (unavailable)"}
+                    </label>
+                    <input
+                      type="radio"
+                      name="roomNumber"
+                      disabled={!available}
+                      checked={isSelected}
+                      onChange={() => handleSelect(item, roomNumber)}
+                    />
+                  </div>
+                );
+              })}
             </div>
           </div>
         ))}
-        <button onClick={handleClick} className="rButton">
-          Reserve Now!
+        {bookingError && <div className="reserve-error">{bookingError}</div>}
+        <button
+          type="button"
+          onClick={handleBook}
+          className="rButton"
+          disabled={submitting}
+        >
+          {submitting ? "Booking..." : "Confirm Booking"}
         </button>
+        {/* TODO: Payment step not integrated — backend Stripe flow is not production-ready */}
       </div>
     </div>
   );
 };
 
- export default Reserve;
+export default Reserve;

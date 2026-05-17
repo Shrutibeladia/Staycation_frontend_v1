@@ -293,3 +293,37 @@
     border-radius: 22px;
   }
 }
+
+.hotelRoomsSection {
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-color);
+}
+
+.hotelRoomsSection h2 {
+  margin-bottom: 16px;
+  color: #003580;
+}
+
+.hotelRoomsList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.hotelRoomCard {
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background: #fafafa;
+}
+
+.hotelRoomCard h3 {
+  margin-bottom: 8px;
+}
+
+.roomNumbers {
+  font-size: 13px;
+  color: #666;
+  margin-top: 8px;
+}

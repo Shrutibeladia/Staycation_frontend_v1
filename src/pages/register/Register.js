@@ -1,7 +1,6 @@
-import axios from "axios";
-import { useContext, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
 import "./register.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -11,7 +10,6 @@ import {
   faPhone,
   faGlobe,
   faCity,
-  faImage,
   faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -23,28 +21,23 @@ const Register = () => {
     phone: "",
     country: "",
     city: "",
-    img: "",
   });
-
-  const { loading, error, dispatch } = useContext(AuthContext);
+  const [fieldErrors, setFieldErrors] = useState({});
+  const { loading, error, register } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setCredentials((prev) => ({ ...prev, [e.target.id]: e.target.value }));
+    setFieldErrors((prev) => ({ ...prev, [e.target.id]: "" }));
   };
 
-  const handleClick = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch({ type: "LOGIN_START" });
-    try {
-      const res = await axios.post(
-        "https://staycation-server-v1-1.onrender.com/api/auth/register",
-        credentials
-      );
-      dispatch({ type: "LOGIN_SUCCESS", payload: res.data });
+    const result = await register(credentials);
+    if (result.success) {
       navigate("/login");
-    } catch (err) {
-      dispatch({ type: "LOGIN_FAILURE", payload: err.response.data });
+    } else if (result.fieldErrors) {
+      setFieldErrors(result.fieldErrors);
     }
   };
 
@@ -53,11 +46,11 @@ const Register = () => {
       <div className="login-wrapper">
         <div className="lContainer register-container">
           <div className="login-header">
-            <h1>✈️ Join StayCation</h1>
+            <h1>Join StayCation</h1>
             <p>Create your account to start booking amazing stays</p>
           </div>
 
-          <form onSubmit={handleClick} className="login-form register-form">
+          <form onSubmit={handleSubmit} className="login-form register-form">
             <div className="form-row">
               <div className="form-group">
                 <label htmlFor="username" className="form-label">
@@ -67,10 +60,14 @@ const Register = () => {
                   type="text"
                   placeholder="Choose a username"
                   id="username"
+                  value={credentials.username}
                   onChange={handleChange}
                   className="lInput"
                   required
                 />
+                {fieldErrors.username && (
+                  <span className="field-error">{fieldErrors.username}</span>
+                )}
               </div>
               <div className="form-group">
                 <label htmlFor="email" className="form-label">
@@ -80,10 +77,14 @@ const Register = () => {
                   type="email"
                   placeholder="your@email.com"
                   id="email"
+                  value={credentials.email}
                   onChange={handleChange}
                   className="lInput"
                   required
                 />
+                {fieldErrors.email && (
+                  <span className="field-error">{fieldErrors.email}</span>
+                )}
               </div>
             </div>
 
@@ -94,12 +95,17 @@ const Register = () => {
                 </label>
                 <input
                   type="password"
-                  placeholder="Create a strong password"
+                  placeholder="At least 8 characters"
                   id="password"
+                  value={credentials.password}
                   onChange={handleChange}
                   className="lInput"
                   required
+                  minLength={8}
                 />
+                {fieldErrors.password && (
+                  <span className="field-error">{fieldErrors.password}</span>
+                )}
               </div>
               <div className="form-group">
                 <label htmlFor="phone" className="form-label">
@@ -109,6 +115,7 @@ const Register = () => {
                   type="text"
                   placeholder="Your phone number"
                   id="phone"
+                  value={credentials.phone}
                   onChange={handleChange}
                   className="lInput"
                   required
@@ -125,6 +132,7 @@ const Register = () => {
                   type="text"
                   placeholder="Your country"
                   id="country"
+                  value={credentials.country}
                   onChange={handleChange}
                   className="lInput"
                   required
@@ -138,24 +146,12 @@ const Register = () => {
                   type="text"
                   placeholder="Your city"
                   id="city"
+                  value={credentials.city}
                   onChange={handleChange}
                   className="lInput"
                   required
                 />
               </div>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="img" className="form-label">
-                <FontAwesomeIcon icon={faImage} /> Profile Picture URL
-              </label>
-              <input
-                type="text"
-                placeholder="https://example.com/image.jpg (optional)"
-                id="img"
-                onChange={handleChange}
-                className="lInput"
-              />
             </div>
 
             {error && <div className="error-message">{error.message}</div>}
@@ -186,8 +182,3 @@ const Register = () => {
 };
 
 export default Register;
-
-
-
-
-

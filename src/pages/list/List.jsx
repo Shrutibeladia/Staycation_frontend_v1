@@ -2,28 +2,49 @@ import "./list.css";
 import Navbar from "../../components/navbar/Navbar";
 import Header from "../../components/header/Header";
 import { useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { format } from "date-fns";
 import { DateRange } from "react-date-range";
 import SearchItem from "../../components/searchItem/SearchItem";
 import useFetch from "../../hooks/useFetch";
+import LoadingSkeleton from "../../components/loading/LoadingSkeleton";
+import ErrorBanner from "../../components/errorBanner/ErrorBanner";
+import PaginationControls from "../../components/pagination/PaginationControls";
+import { getErrorMessage } from "../../api/errorUtils";
 
 const List = () => {
   const location = useLocation();
-  const [destination, setDestination] = useState(location.state.destination);
-  const [dates, setDates] = useState(location.state.dates);
-  const [openDate, setOpenDate] = useState(false);
-  const [options, setOptions] = useState(location.state.options);
-  const [min, setMin] = useState(undefined);
-  const [max, setMax] = useState(undefined);
-
-  const { data, loading, error, reFetch } = useFetch(
-    `/hotels?city=${destination}&min=${min || 0 }&max=${max || 99999}`
+  const [destination, setDestination] = useState(location.state?.destination || "");
+  const [dates, setDates] = useState(
+    location.state?.dates || [
+      { startDate: new Date(), endDate: new Date(), key: "selection" },
+    ]
   );
+  const [openDate, setOpenDate] = useState(false);
+  const [min, setMin] = useState("");
+  const [max, setMax] = useState("");
+  const [type, setType] = useState("");
+  const [page, setPage] = useState(1);
+  const limit = 10;
 
-  const handleClick = () => {
-    reFetch();
+  const queryString = useMemo(() => {
+    const params = new URLSearchParams();
+    params.set("page", String(page));
+    params.set("limit", String(limit));
+    if (destination) params.set("city", destination);
+    if (type) params.set("type", type);
+    if (min) params.set("min", min);
+    if (max) params.set("max", max);
+    return `/hotels?${params.toString()}`;
+  }, [destination, type, min, max, page]);
+
+  const { data, meta, loading, error, reFetch } = useFetch(queryString);
+
+  const handleSearch = () => {
+    setPage(1);
   };
+
+  const errorMessage = error ? getErrorMessage(error, "Failed to load hotels.") : null;
 
   return (
     <div>
@@ -34,8 +55,24 @@ const List = () => {
           <div className="listSearch">
             <h1 className="lsTitle">Search</h1>
             <div className="lsItem">
-              <label>Destination</label>
-              <input placeholder={destination} type="text" />
+              <label>Destination (exact city name)</label>
+              <input
+                placeholder="e.g. Jaipur"
+                type="text"
+                value={destination}
+                onChange={(e) => setDestination(e.target.value)}
+              />
+            </div>
+            <div className="lsItem">
+              <label>Type</label>
+              <select value={type} onChange={(e) => setType(e.target.value)}>
+                <option value="">All types</option>
+                <option value="hotel">Hotel</option>
+                <option value="apartments">Apartments</option>
+                <option value="resorts">Resorts</option>
+                <option value="villas">Villas</option>
+                <option value="cabins">Cabins</option>
+              </select>
             </div>
             <div className="lsItem">
               <label>Check-in Date</label>
@@ -60,6 +97,7 @@ const List = () => {
                   </span>
                   <input
                     type="number"
+                    value={min}
                     onChange={(e) => setMin(e.target.value)}
                     className="lsOptionInput"
                   />
@@ -70,52 +108,38 @@ const List = () => {
                   </span>
                   <input
                     type="number"
+                    value={max}
                     onChange={(e) => setMax(e.target.value)}
                     className="lsOptionInput"
                   />
                 </div>
-                <div className="lsOptionItem">
-                  <span className="lsOptionText">Adult</span>
-                  <input
-                    type="number"
-                    min={1}
-                    className="lsOptionInput"
-                    placeholder={options.adult}
-                  />
-                </div>
-                <div className="lsOptionItem">
-                  <span className="lsOptionText">Children</span>
-                  <input
-                    type="number"
-                    min={0}
-                    className="lsOptionInput"
-                    placeholder={options.children}
-                  />
-                </div>
-                <div className="lsOptionItem">
-                  <span className="lsOptionText">Room</span>
-                  <input
-                    type="number"
-                    min={1}
-                    className="lsOptionInput"
-                    placeholder={options.room}
-                  />
-                </div>
               </div>
             </div>
-            <button onClick={handleClick}>Search</button>
+            <button type="button" onClick={handleSearch}>
+              Search
+            </button>
           </div>
           <div className="listResult">
-          {loading ? (
-              "loading"
+            {loading ? (
+              <LoadingSkeleton count={4} type="list" />
+            ) : errorMessage ? (
+              <ErrorBanner message={errorMessage} onRetry={reFetch} />
             ) : (
               <>
-                {data.map((item) => (
+                {data?.length === 0 && (
+                  <p className="no-results">No hotels found. Try another city or filters.</p>
+                )}
+                {data?.map((item) => (
                   <SearchItem item={item} key={item._id} />
                 ))}
+                <PaginationControls
+                  page={meta?.page || page}
+                  total={meta?.total || 0}
+                  limit={meta?.limit || limit}
+                  onPageChange={setPage}
+                />
               </>
             )}
-            
           </div>
         </div>
       </div>

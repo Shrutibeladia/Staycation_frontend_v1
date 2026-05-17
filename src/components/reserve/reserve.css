@@ -141,3 +141,12 @@
     padding: 13px 18px;
   }
 }
+
+.reserve-error {
+  color: #dc2626;
+  font-size: 14px;
+  margin: 12px 0;
+  padding: 8px 12px;
+  background: #fee2e2;
+  border-radius: 6px;
+}

@@ -8,6 +8,27 @@
   box-sizing: border-box;
 }
 
+.route-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40vh;
+  font-size: 16px;
+  color: var(--text-gray);
+}
+
+.field-error {
+  display: block;
+  color: #dc2626;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.no-results {
+  padding: 24px;
+  color: var(--text-gray);
+}
+
 :root {
   /* Primary Colors */
   --primary-color: #2563eb;

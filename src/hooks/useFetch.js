@@ -1,37 +1,88 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useCallback, useEffect, useState } from "react";
+import axiosInstance from "../api/axiosConfig";
 
-const useFetch = (url) => {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+/**
+ * Normalize API responses — hotels/rooms endpoints return paginated objects.
+ */
+const normalizeResponse = (raw, mode) => {
+  if (mode === "raw") return raw;
+  if (mode === "object") return raw;
+  if (Array.isArray(raw)) return raw;
+  if (raw?.hotels) return raw.hotels;
+  if (raw?.rooms) return raw.rooms;
+  if (raw?.bookings) return raw.bookings;
+  if (raw?.users) return raw.users;
+  return raw;
+};
 
-  useEffect(() => {
-    const fetchData = async () => {
+const extractMeta = (raw) => {
+  if (!raw || Array.isArray(raw)) return null;
+  if (raw.total !== undefined) {
+    return { total: raw.total, page: raw.page, limit: raw.limit };
+  }
+  return null;
+};
+
+/**
+ * Reusable GET hook with credentials and optional retry.
+ * @param {string|null} url - API path after /api (e.g. "/hotels")
+ * @param {object} options - { mode: 'array'|'object'|'raw', enabled: true, retry: true }
+ */
+const useFetch = (url, options = {}) => {
+  const { mode = "array", enabled = true, retry = true } = options;
+  const [data, setData] = useState(mode === "object" ? null : []);
+  const [meta, setMeta] = useState(null);
+  // Start as loading when a URL is provided — avoids rendering with null data before fetch
+  const [loading, setLoading] = useState(() => Boolean(enabled && url));
+  const [error, setError] = useState(null);
+
+  const fetchData = useCallback(
+    async (targetUrl = url) => {
+      if (!targetUrl || !enabled) return;
       setLoading(true);
+      setError(null);
+
+      const attempt = async () => {
+        const res = await axiosInstance.get(targetUrl);
+        return res.data;
+      };
+
       try {
-        const res = await axios.get('https://staycation-server-v1-1.onrender.com/api' + url);
-        setData(res.data);
+        let raw;
+        try {
+          raw = await attempt();
+        } catch (firstErr) {
+          // Retry idempotent GET once on network failure
+          if (retry && !firstErr?.response) {
+            raw = await attempt();
+          } else {
+            throw firstErr;
+          }
+        }
+        setMeta(extractMeta(raw));
+        const normalized = normalizeResponse(raw, mode);
+        if (mode === "object" && (normalized == null || normalized === "")) {
+          setData(null);
+          setError({ response: { status: 404, data: { message: "Not found." } } });
+        } else {
+          setData(normalized);
+        }
       } catch (err) {
         setError(err);
+        if (mode === "object") setData(null);
+        else if (mode === "array") setData([]);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
-    };
-    fetchData();
-  }, [url]);
+    },
+    [url, mode, enabled, retry]
+  );
 
-  const reFetch = async () => {
-    setLoading(true);
-    try {
-      const res = await axios.get('https://staycation-server-v1-1.onrender.com/api' + url);
-      setData(res.data);
-    } catch (err) {
-      setError(err);
-    }
-    setLoading(false);
-  };
+  useEffect(() => {
+    fetchData(url);
+  }, [url, fetchData]);
 
-  return { data, loading, error, reFetch };
+  return { data, meta, loading, error, reFetch: () => fetchData(url) };
 };
 
 export default useFetch;

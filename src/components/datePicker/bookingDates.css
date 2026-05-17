@@ -1,0 +1,38 @@
+.booking-dates {
+  margin: 12px 0 16px;
+}
+
+.booking-dates-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 8px;
+}
+
+.booking-dates-trigger {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: white;
+  font-size: 14px;
+  cursor: pointer;
+  text-align: left;
+  color: #0f172a;
+}
+
+.booking-dates-trigger:hover {
+  border-color: #2563eb;
+}
+
+.booking-dates-calendar {
+  margin-top: 12px;
+  position: relative;
+  z-index: 20;
+}
+
+.booking-dates-compact .booking-dates-trigger {
+  font-size: 13px;
+  padding: 8px 12px;
+}
