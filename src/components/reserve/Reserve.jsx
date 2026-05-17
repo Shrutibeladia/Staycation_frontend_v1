@@ -54,16 +54,18 @@ import { useNavigate } from "react-router-dom";
   const handleClick = async () => {
     try {
       await Promise.all(
-        selectedRooms.map((roomId) => {
-          const res = axios.put(`/rooms/availability/${roomId}`, {
+        selectedRooms.map(async (roomId) => {
+          const res = await axios.put(`/rooms/availability/${roomId}`, {
             dates: alldates,
           });
           return res.data;
         })
       );
       setOpen(false);
-      navigate("/");
-    } catch (err) {}
+      navigate("/success");
+    } catch (err) {
+      console.error(err);
+    }
   };
   return (
      <div className="reserve">

@@ -47,7 +47,7 @@ const Navbar = () => {
           ) : (
             <div className="nav-auth-buttons">
               <button 
-                className="btn btn-ghost" 
+                className="btn btn-ghost test" 
                 onClick={navigateRegister}
               >
                 Register
